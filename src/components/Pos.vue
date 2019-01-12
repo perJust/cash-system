@@ -20,7 +20,7 @@
               </div>
               <el-button type="warning">挂单</el-button>
               <el-button type="danger" @click="delAllGoods">删除</el-button>
-              <el-button type="success">结账</el-button>
+              <el-button type="success" @click="checkout">结账</el-button>
             </el-tab-pane>
             <el-tab-pane label="挂单">
               2
@@ -138,6 +138,26 @@ export default {
       this.tableData = this.tableData.filter(o => o.goodsId !== goods.goodsId)
     },
     delAllGoods () {
+      this.tableData = []
+    },
+    checkout () {
+    //   axios.post('...', {
+    //     id:
+    //     count:
+    //     ...
+    //   })
+    // }
+      if (this.tableData.length) {
+        this.$message({
+          message: '结账成功',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: '暂无商品',
+          type: 'error'
+        })
+      }
       this.tableData = []
     }
   },
