@@ -10,7 +10,7 @@
                 <el-table-column prop="price" label="单价" width="80"></el-table-column>
                 <el-table-column label="操作" fixed="right">
                   <template slot-scope="scope">
-                      <el-button type="text" size="small">删除</el-button>
+                      <el-button type="text" size="small" @click="delGoodsList(scope.row)">删除</el-button>
                       <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button> <!-- scope.row获取该行的数据内容 -->
                   </template>
                 </el-table-column>
@@ -19,7 +19,7 @@
                 <span style="margin-right:20px;"><small>数量:</small>{{orderListCount}}</span><span><small>总价:￥</small>{{orderListPay}}</span>
               </div>
               <el-button type="warning">挂单</el-button>
-              <el-button type="danger">删除</el-button>
+              <el-button type="danger" @click="delAllGoods">删除</el-button>
               <el-button type="success">结账</el-button>
             </el-tab-pane>
             <el-tab-pane label="挂单">
@@ -133,13 +133,19 @@ export default {
         arr = {...Object.assign({}, goods), count: 1} // 复制选中的商品数据 并添加count
         this.tableData.push(arr)
       }
+    },
+    delGoodsList (goods) {
+      this.tableData = this.tableData.filter(o => o.goodsId !== goods.goodsId)
+    },
+    delAllGoods () {
+      this.tableData = []
     }
   },
   computed: {
     orderListCount () {
       return this.tableData.reduce(function (total, ind) {
         return total + ind.count
-      }, 0)
+      }, 0) // 起始值必须要写  不写默认起始值就是数组的第一位 如果是第一位在这里作为起始值那就会error
     },
     orderListPay () {
       return this.tableData.reduce(function (total, ind) {
@@ -150,6 +156,7 @@ export default {
   created () {
     axios.get('https://www.easy-mock.com/mock/5b8b30dbf032f03c5e71de7f/kuaican/oftenGoods').then(response => {
       this.oftenGoods = response.data
+      // console.log(response)
     }).catch(err => {
       console.log(err)
     })
